@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from utils import *
 
 def conv3x3(input_channels, output_channels, stride = 1, 
             groups = 1, dilation = 1):
@@ -84,10 +83,10 @@ class BottleNeck(ResidualBlock):
         self.blocks = nn.Sequential(
             conv1x1(self.input_channels, self.output_channels),
             nn.BatchNorm2d(self.output_channels),
-            self.activate,
+            activation_func(self.activation),
             conv3x3(self.output_channels, self.output_channels, stride=self.downsample),
             nn.BatchNorm2d(self.output_channels),
-            self.activate,
+            activation_func(self.activation),
             conv1x1(self.output_channels, self.expanded_channels),
             nn.BatchNorm2d(self.expanded_channels),
         )
@@ -150,15 +149,29 @@ class ResNet(nn.Module):
 
 
 def resnet18(num_classes=1000, in_channels=3, block=ResidualBlock, *args, **kwargs):
-    model = ResNet(num_classes, in_channels, pretrained, block=block, deepths=[2, 2, 2, 2], *args, **kwargs)    
+    model = ResNet(num_classes, in_channels,  block=block, deepths=[2, 2, 2, 2], *args, **kwargs)    
     return model
 
 def resnet34(num_classes=1000, in_channels=3,  block=ResidualBlock, *args, **kwargs):
-    model = ResNet(num_classes, in_channels, pretrained, block=block, deepths=[3, 4, 6, 3], *args, **kwargs)
+    model = ResNet(num_classes, in_channels,  block=block, deepths=[3, 4, 6, 3], *args, **kwargs)
+    """ Not implement: matching my layers with orinal ones for loading pytorch 
+    resnet weights """
     # if pretrained:
     #     if num_classes != 1000:
     #         raise ValueError("Number classes should equals 1000 if model's pretrained")
     #     model = copy_weights(model, 'resnet34')    
+    return model
+
+def resnet50(num_classes=1000, in_channels=3, block=BottleNeck, *args, **kwargs):
+    model = ResNet(num_classes, in_channels,  block=block, deepths=[3, 4, 6, 3], *args, **kwargs)    
+    return model
+
+def resnet101(num_classes=1000, in_channels=3, block=BottleNeck, *args, **kwargs):
+    model = ResNet(num_classes, in_channels,  block=block, deepths=[3, 4, 23, 3], *args, **kwargs)    
+    return model
+
+def resnet152(num_classes=1000, in_channels=3, block=BottleNeck, *args, **kwargs):
+    model = ResNet(num_classes, in_channels,  block=block, deepths=[3, 8, 36, 3], *args, **kwargs)    
     return model
 
 

@@ -154,7 +154,7 @@ def resnet18(num_classes=1000, in_channels=3, block=ResidualBlock, *args, **kwar
 
 def resnet34(num_classes=1000, in_channels=3,  block=ResidualBlock, *args, **kwargs):
     model = ResNet(num_classes, in_channels,  block=block, deepths=[3, 4, 6, 3], *args, **kwargs)
-    """ Not implement: matching my layers with orinal ones for loading pytorch 
+    """ Not implemented: matching my layers with original ones for loading pytorch 
     resnet weights """
     # if pretrained:
     #     if num_classes != 1000:
